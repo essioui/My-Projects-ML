@@ -10,20 +10,20 @@ from xgboost import XGBRegressor
 from sklearn import metrics
 import joblib
 
-#
+# loading the dataset
 data = fetch_california_housing(as_frame=True)
 print(data)
 
 house_price_dataframe = pd.DataFrame(data=data.data, columns=data.feature_names)
 
-#
+# print the first 5 rows of the dataframe
 print(house_price_dataframe.head())
 
-#
+# adding the target column to the dataframe
 house_price_dataframe['Prices'] = data.target
 print(house_price_dataframe.head())
 
-#
+# checking the number of rows and columns in the dataframe
 print(house_price_dataframe.shape)
 
 # check for messing values
