@@ -93,7 +93,7 @@ python3 house_price_xgboost.py
 - Scatter plot of actual vs predicted prices
 - A saved model file house_price_model.pkl
 
-![Heatmap](images/actual vs predict.png)
+![Heatmap]("images/actual vs predict.png")
 
 ## Saved Model
 
