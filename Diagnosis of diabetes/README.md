@@ -6,12 +6,15 @@ This project predicts diabetes risk based on health indicators using machine lea
 
 ## Project Structure
 
-├── app.py # Streamlit web application for predictions
-├── outliers_data.py # Utilities to remove outliers and scale features
-├── data_loaded.py # Load and preprocess CSV datasets
-├── train_models.py # Train multiple ML models and save the best one
-├── data/ # Folder to store CSV datasets
+```text
+.
+├── app.py                  # Streamlit web application for predictions
+├── outliers_data.py        # Utilities to remove outliers and scale features
+├── data_loaded.py          # Load and preprocess CSV datasets
+├── train_models.py         # Train multiple ML models and save the best one
+├── data/                   # Folder to store CSV datasets
 └── best_diabetes_model.joblib # Saved trained model
+```
 
 ---
 
@@ -72,8 +75,8 @@ This project predicts diabetes risk based on health indicators using machine lea
    streamlit run app.py
 
 4. **Open the browser at the URL shown in the terminal**
-   Local URL: http://localhost:8501
-   Network URL: http://192.168.1.57:8501
+   - Local URL: http://localhost:8501
+   - Network URL: http://192.168.1.57:8501
 
 ## Datasets
 
