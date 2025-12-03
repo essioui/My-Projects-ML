@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """
-Load and preprocess diabetes CSV datasets.
+Load and preprocess diabetes dataset.
 """
 import pandas as pd
 import os
-from sklearn.model_selection import train_test_split
-from outliers_data import remove_outliers_iqr, scale_features_robust
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -21,9 +19,10 @@ def load_and_preprocess_data(filename):
     data_path = os.path.join(BASE_DIR, "data", filename)
 
     df = pd.read_csv(data_path)
-    
+
+    # unify diabetes column
     if "Diabetes_binary" in df.columns:
-        df['Diabetes_012'] = df['Diabetes_binary']
+        df["Diabetes_012"] = df["Diabetes_binary"]
 
     selected_columns = [
         "Diabetes_012",
@@ -42,9 +41,10 @@ def load_and_preprocess_data(filename):
         "Income",
     ]
 
-    df_selected = df[selected_columns].copy()
+    df = df[selected_columns].copy()
 
-    df_selected.rename(columns={
+    # rename to match Streamlit input
+    df.rename(columns={
         "Diabetes_012": "diabetes",
         "HighBP": "high_blood_pressure",
         "HighChol": "high_cholesterol",
@@ -55,13 +55,5 @@ def load_and_preprocess_data(filename):
         "DiffWalk": "difficulty_walking",
     }, inplace=True)
 
-    print("Missing values:")
-    print(df_selected.isnull().sum())
 
-    # remove outliers
-    df_clean = remove_outliers_iqr(df_selected, exclude_columns=["diabetes"])
-
-    # scale
-    df_scaled = scale_features_robust(df_clean, exclude_columns=["diabetes"])
-
-    return df_scaled
+    return df
