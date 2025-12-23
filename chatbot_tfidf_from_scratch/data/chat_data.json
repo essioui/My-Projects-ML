@@ -1,0 +1,38 @@
+[
+  {
+    "question": "What is OOP?",
+    "answer": "OOP is a programming paradigm based on objects."
+  },
+  {
+    "question": "What is Python?",
+    "answer": "Python is a high-level programming language."
+  },
+  {
+    "question": "What is Git?",
+    "answer": "Git is a version control system."
+  },
+  {
+    "question": "What is NLP?",
+    "answer": "NLP stands for Natural Language Processing."
+  },
+  {
+    "question": "Explain machine learning",
+    "answer": "Machine learning is a field of AI that allows systems to learn from data."
+  },
+  {
+    "question": "What is a car?",
+    "answer": "A car is a vehicle with four wheels."
+  },
+  {
+    "question": "How to run fast?",
+    "answer": "Running fast requires training and practice."
+  },
+  {
+    "question": "Where do you go?",
+    "answer": "I can go anywhere you want."
+  },
+  {
+    "question": "Who is a child?",
+    "answer": "A child is a young human being."
+  }
+]
