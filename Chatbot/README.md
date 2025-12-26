@@ -16,6 +16,7 @@ Fully implemented from scratch without external chatbot frameworks
 
 ## Project Structure
 
+```
 chatbot/
 │
 ├── data/
@@ -25,12 +26,15 @@ chatbot/
 ├── bert_encoder.py
 ├── engine.py
 └── readme.md
+```
 
 ## Knowledge Base Format
 
 The knowledge base is stored as a JSON file and can be easily extended.
 
 Example:
+
+```
 [
 {
 "question": "what is oop in python",
@@ -41,6 +45,7 @@ Example:
 "answer": "Machine learning allows systems to learn from data."
 }
 ]
+```
 
 ## How It Works
 
