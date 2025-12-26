@@ -1,0 +1,14 @@
+[
+  {
+    "question": "what is oop in python",
+    "answer": "OOP is a programming paradigm based on objects."
+  },
+  {
+    "question": "what is machine learning",
+    "answer": "Machine learning allows systems to learn from data."
+  },
+  {
+    "question": "what is python",
+    "answer": "Python is a high-level programming language."
+  }
+]
