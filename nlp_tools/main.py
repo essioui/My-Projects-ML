@@ -61,10 +61,8 @@ for vec in results["tfidf_vectors"]:
 
 tfidf = results["tfidf_vectors"]
 
-# Cosine similarity بين الوثيقة 1 و 2
 sim_1_2 = process.cosine_similarity(tfidf[0], tfidf[1])
 
-# بين الوثيقة 1 و 3
 sim_1_3 = process.cosine_similarity(tfidf[0], tfidf[2])
 
 print("Cosine(Doc1, Doc2):", sim_1_2)
