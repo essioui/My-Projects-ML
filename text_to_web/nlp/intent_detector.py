@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """
+Intent Detector
 """
-
 
 def detect_intent(text):
     """
+    Detect user intent from text.
     """
     text = text.lower()
-    
-    verbs = ["create", "make", "build", "generate", "write"]
-    objcts = ["website", "webpage", "site", "page", "web"]
-    
-    if any(verb in text for verb in verbs) and any(obj in text for obj in objcts):
-        return "create_website"
-    return "UNKNOWN"
+
+    verbs = ["create", "make", "build", "generate", "write", "new"]
+    objects = ["website", "webpage", "site", "page", "web"]
+
+    if any(v in text for v in verbs) and any(o in text for o in objects):
+        return "create_page"
+
+    return "update_page"

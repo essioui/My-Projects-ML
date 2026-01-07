@@ -6,30 +6,27 @@ def extract_entities(text):
     """
     """
     text = text.lower()
-    elements = []
+    entities = {
+        "head": [],
+        "body": [],
+        "footer": []
+    }
     
     if "title" in text:
-        elements.append({
+        entities["head"].append({
             "type": "title",
-            "style": {
-                "align": "center",
-                "font_size": "24px",
-                "font_weight": "bold",
-                "color": "#333333",
-                "margin": "20px 0"
-            }
+            "text": "AI Generated Website"
+        })
+    
+    if "paragraph" in text:
+        entities["body"].append({
+            "type": "paragraph",
+            "text": "This is a sample paragraph."
         })
     
     if "footer" in text:
-        elements.append({
+        entities["footer"].append({
             "type": "footer",
-            "style": {
-                "align": "center",
-                "font_size": "14px",
-                "font_weight": "normal",
-                "color": "#777777",
-                "margin": "20px 0",
-                "text": "© 2024 My Website"
-            }
+            "text": "© 2026"
         })
-    return elements
+    return entities

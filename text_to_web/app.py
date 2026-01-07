@@ -1,16 +1,25 @@
 #!/usr/bin/env python3
 """
 """
-from nlp.intent_detector import detect_intent
-from nlp.entity_extractor import extract_entities
-from schema.schema_builder import build_schema
+import json
+from nlp.parser import parser
 from generator.html_generator import generate_html
+from generator.file_writer import save_html
 
 text = input("Describe your page: ")
 
-intent = detect_intent(text)
-entities = extract_entities(text)
-schema = build_schema(intent, entities)
+intent, entities = parser(text)
+
+schema = {
+    "intent": intent,
+    "elements": entities
+}
+
+print("Generated Schema:", json.dumps(schema, indent=2))
 
 html = generate_html(schema)
-print(html)
+
+path = save_html(html)
+
+print(f"\nHTML file saved to: {path.resolve()}")
+

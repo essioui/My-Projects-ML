@@ -8,5 +8,9 @@ def build_schema(intent, elements):
     """
     return {
         "intent": intent,
-        "elements": elements
+        "elements": {
+            "head": elements.get("head", []),
+            "body": elements.get("body", []),
+            "footer": elements.get("footer", [])
+        }
     }

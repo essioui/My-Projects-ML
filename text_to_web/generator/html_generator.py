@@ -1,28 +1,53 @@
 #!/usr/bin/env python3
 """
+HTML Generator
 """
+from pathlib import Path
+
+BASE = Path("components")
 
 
-def render_title(el):
+def load_component(section, name):
     """
+    Load HTML component template.
     """
-    return f"<h1 style='text-align:{el['style'].get('align','left')}; color:{el['style'].get('color','black')};'>{el.get('text','Title')}</h1>"
+    path = BASE / section / f"{name}.html"
+    if not path.exists():
+        raise FileNotFoundError(f"Component not found: {path}")
+    return path.read_text()
 
 
-def render_footer(el):
+def render_component(section, el):
     """
+    Render a component with its data.
     """
-    return f"<footer style='text-align:{el['style'].get('align','center')}; color:{el['style'].get('color','black')};'>{el.get('text','Footer')}</footer>"
+    template = load_component(section, el["type"])
+    return template.format(**el)
 
 
 def generate_html(schema):
     """
+    Generate full HTML page from schema.
     """
-    html = ""
-    
-    for el in schema["elements"]:
-        if el["type"] == "title":
-            html += render_title(el)
-        elif el["type"] == "footer":
-            html += render_footer(el)
+    html = """<!DOCTYPE html>
+<html>
+<head>
+"""
+
+    for el in schema["elements"]["head"]:
+        html += render_component("head", el) + "\n"
+
+    html += """</head>
+<body>
+"""
+
+    for el in schema["elements"]["body"]:
+        html += render_component("body", el) + "\n"
+
+    for el in schema["elements"]["footer"]:
+        html += render_component("footer", el) + "\n"
+
+    html += """</body>
+</html>"""
+
     return html
