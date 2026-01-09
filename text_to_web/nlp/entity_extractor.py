@@ -6,16 +6,22 @@ def extract_styles(text):
     dict -> inline CSS string
     """
     styles = {}
+
     if "center" in text or "centered" in text:
         styles["align"] = "center"
+        
     if "red" in text:
         styles["color"] = "red"
+        
     elif "blue" in text:
         styles["color"] = "blue"
+        
     if "big" in text or "large" in text:
         styles["size"] = "large"
+        
     elif "small" in text:
         styles["size"] = "small"
+    
     return styles
 
 

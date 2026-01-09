@@ -45,48 +45,42 @@ def style_dict_to_css(style_dict):
     return f' style="{css}"'
 
 
-def render_component(section, el):
+def render_component(section, name, data):
     """
     Render a component with its data.
     """
-    template = load_component(section, el["type"])
+    template = load_component(section, name)
+    data = data.copy()
     
-    style_css = style_dict_to_css(el.get("style", {}))
-    el = el.copy()
-    el["style"] = style_css
+    style_css = style_dict_to_css(data.get("style", {}))
     
-    if el["type"] == "navbar":
+    data["style"] = style_css
+    
+    if data["type"] == "navbar":
         items_html = ""
-        for item in el.get("items", []):
+        for item in data.get("items", []):
             items_html += f"<li>{item}</li>\n"
-        el["items"] = items_html
+        data["items"] = items_html
 
-    return template.format(**el)
+    return template.format(**data)
 
 
 def generate_html(schema):
     """
     Generate full HTML page from schema.
     """
-    html = """<!DOCTYPE html>
-<html>
-<head>
-"""
+    html = "<!DOCTYPE html><html><head>\n"
 
-    for el in schema["elements"]["head"]:
-        html += render_component("head", el) + "\n"
+    for name, data in schema["head"].items():
+        html += render_component("head", name, data) + "\n"
 
-    html += """</head>
-<body>
-"""
+    html += "</head><body>\n"
 
-    for el in schema["elements"]["body"]:
-        html += render_component("body", el) + "\n"
+    for name, data in schema["body"].items():
+        html += render_component("body", name, data) + "\n"
 
-    for el in schema["elements"]["footer"]:
-        html += render_component("footer", el) + "\n"
+    for name, data in schema["footer"].items():
+        html += render_component("footer", name, data) + "\n"
 
-    html += """</body>
-</html>"""
-
+    html += "</body></html>"
     return html

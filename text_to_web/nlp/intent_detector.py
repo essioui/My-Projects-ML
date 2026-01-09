@@ -9,10 +9,9 @@ def detect_intent(text):
     """
     text = text.lower()
 
-    verbs = ["create", "make", "build", "generate", "write", "new"]
-    objects = ["website", "webpage", "site", "page", "web"]
-
-    if any(v in text for v in verbs) and any(o in text for o in objects):
-        return "create_page"
-
-    return "update_page"
+    if any(w in text for w in ["create", "build", "make", "generate"]):
+        return "create_website"
+    elif any(w in text for w in ["update", "modify", "change", "edit"]):
+        return "update_website"
+    else:
+        return "unknown_intent"

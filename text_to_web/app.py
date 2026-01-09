@@ -1,25 +1,32 @@
 #!/usr/bin/env python3
 """
+Main application to convert text descriptions into HTML web pages.
 """
 import json
 from nlp.parser import parser
 from generator.html_generator import generate_html
+from schema.schema_builder import build_or_update_schema
 from generator.file_writer import save_html
 
-text = input("Describe your page: ")
+schema = None
 
-intent, entities = parser(text)
+while True:
+    text = input("Describe your page (or 'exit'): ")
+    if text.lower() == 'exit':
+        break
 
-schema = {
-    "intent": intent,
-    "elements": entities
-}
+    intent, entities = parser(text)
 
-print("Generated Schema:", json.dumps(schema, indent=2))
+    schema = build_or_update_schema(schema, intent, entities)
 
-html = generate_html(schema)
+    print("RAW ENTITIES:", json.dumps(entities, indent=2))
 
-path = save_html(html)
 
-print(f"\nHTML file saved to: {path.resolve()}")
+    print("Generated Schema:")
+    print(json.dumps(schema, indent=2))
+
+    html = generate_html(schema)
+    path = save_html(html)
+
+    print(f"\nHTML file saved to: {path.resolve()}")
 
