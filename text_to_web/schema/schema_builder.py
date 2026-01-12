@@ -12,15 +12,19 @@ def build_or_update_schema(schema, intent, entities):
             "body": {},
             "footer": {}
         }
+    
+    for element in entities.get("head", []):
+        
+        schema["head"][element["type"]] = element
 
-    for section in ("head", "body", "footer"):
+    for section in ("body", "footer"):
         for element in entities.get(section, []):
             el_type = element["type"]
             
             if el_type not in schema[section]:
                 schema[section][el_type] = element
             else:
-                if section in ("body", "footer") and "style" in element:
+                if section in ("head", "body", "footer") and "style" in element:
                     schema[section][el_type].setdefault("style", {})
                     schema[section][el_type]["style"].update(element["style"])
     return schema

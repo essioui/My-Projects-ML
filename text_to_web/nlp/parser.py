@@ -1,45 +1,50 @@
 #!/usr/bin/env python3
 """
+parser.py
 """
-from nlp.intent_detector import detect_intent
-from nlp.entity_extractor import extract_entities
+from nlp import (
+    detect_intent,
+    detect_section,
+    detect_element,
+    extract_content,
+    extract_styles
+)
 
+last_element = None
 
-def parser(text):
-    text = text.lower()
+def parser(text, schema=None):
+    """
+    Parse text to extract intent, section, element, content, and style.
+    """
+    global last_element
+    intent = detect_intent(text)
+    section = detect_section(text)
+    element = detect_element(text)
 
-    # intent
-    if "create" in text:
-        intent = "create_page"
-    elif "change" in text or "update" in text:
-        intent = "update"
-    else:
-        intent = "unknown"
+    entities = {"head": [], "body": [], "footer": []}
 
-    entities = {
-        "head": [],
-        "body": [],
-        "footer": []
-    }
+    if not element or element.lower() == "unknown":
+        
+        if last_element:
+            element = last_element
+            
+            if schema:
+                for sec in ["head", "body", "footer"]:
+                    if last_element in schema[sec]:
+                        section = sec
+                        break
+        else:
+            return intent, entities
 
-    # TITLE
-    if "title" in text:
-        title = {"type": "title", "text": "AI Generated Website"}
-        entities["head"].append(title)
+    content = extract_content(text)
+    styles = extract_styles(text)
 
-    if "paragraph" in text:
-        paragraph = {
-            "type": "paragraph",
-            "text": "This is a sample paragraph.",
-            "style": {}
-        }
-    if "yellow" in text:
-        paragraph["style"]["color"] = "yellow"
-    if "bold" in text:
-        paragraph["style"]["font_weight"] = "bold"
-    if "center" in text:
-        paragraph["style"]["align"] = "center"
-    entities["body"].append(paragraph)
+    entity = {"type": element}
+    if content:
+        entity["text"] = content
+    if styles:
+        entity["style"] = styles
 
+    last_element = element
+    entities[section].append(entity)
     return intent, entities
-

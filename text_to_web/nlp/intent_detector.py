@@ -2,16 +2,21 @@
 """
 Intent Detector
 """
+from nlp.nlp_engine import nlp
+
 
 def detect_intent(text):
     """
     Detect user intent from text.
     """
-    text = text.lower()
-
-    if any(w in text for w in ["create", "build", "make", "generate"]):
-        return "create_website"
-    elif any(w in text for w in ["update", "modify", "change", "edit"]):
-        return "update_website"
-    else:
-        return "unknown_intent"
+    doc = nlp(text)
+    
+    for token in doc:
+        if token.pos_ == "VERB":
+            if token.lemma_ in ["create", "build", "make", "generate"]:
+                return "create"
+            
+            if token.lemma_ in ["update", "modify", "change", "edit"]:
+                return "update"
+            
+    return "unknown"

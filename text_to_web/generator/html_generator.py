@@ -69,7 +69,7 @@ def generate_html(schema):
     """
     Generate full HTML page from schema.
     """
-    html = "<!DOCTYPE html><html><head>\n"
+    html = "<!DOCTYPE html>\n<html>\n<head>\n"
 
     for name, data in schema["head"].items():
         html += render_component("head", name, data) + "\n"
