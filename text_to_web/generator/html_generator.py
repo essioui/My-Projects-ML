@@ -19,6 +19,7 @@ def load_component(section, name):
 
 def style_dict_to_css(style_dict):
     """
+    serialize style dictionary to inline CSS.
     """
     css = ""
     if not style_dict:
@@ -57,9 +58,16 @@ def render_component(section, name, data):
     data["style"] = style_css
     
     if data["type"] == "navbar":
+        items = data.get("items")
+        
+        if isinstance(items, str):
+            items = [x.strip() for x in items.split(",")]
+            
         items_html = ""
-        for item in data.get("items", []):
+        
+        for item in items:
             items_html += f"<li>{item}</li>\n"
+            
         data["items"] = items_html
 
     return template.format(**data)
@@ -71,16 +79,26 @@ def generate_html(schema):
     """
     html = "<!DOCTYPE html>\n<html>\n<head>\n"
 
+    html += load_component("head", "meta") + "\n"
+
     for name, data in schema["head"].items():
         html += render_component("head", name, data) + "\n"
 
-    html += "</head><body>\n"
+    html += "</head>\n<body>\n"
 
     for name, data in schema["body"].items():
-        html += render_component("body", name, data) + "\n"
+        if isinstance(data, list):
+            for item in data:
+                html += render_component("body", name, item) + "\n"
+        else:
+            html += render_component("body", name, data) + "\n"
 
     for name, data in schema["footer"].items():
-        html += render_component("footer", name, data) + "\n"
+        if isinstance(data, list):
+            for item in data:
+                html += render_component("footer", name, item) + "\n"
+        else:
+            html += render_component("footer", name, data) + "\n"
 
-    html += "</body></html>"
+    html += "</body>\n</html>"
     return html

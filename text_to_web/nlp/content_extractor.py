@@ -10,25 +10,23 @@ STOP_WORDS = {
     "center", "centered",
     "red", "blue", "green", "black",
     "big", "large", "small",
-    "change", "update", "create", "make"
+    "change", "update", "create", "make", "add", "build"
 }
 
 def extract_content(text):
-    """
-    Extract main content from the given text.
-    """
     doc = nlp(text)
     words = []
-
-    after_element = False
+    found_element = False
 
     for token in doc:
-        if token.lemma_ in ["title", "paragraph", "header"]:
-            after_element = True
+        lemma = token.lemma_.lower()
+        
+        if lemma in {"title", "paragraph", "navbar", "footer"}:
+            found_element = True
             continue
-
-        if after_element:
-            if token.lemma_ in STOP_WORDS:
+        
+        if found_element:
+            if lemma in STOP_WORDS:
                 continue
             words.append(token.text)
 

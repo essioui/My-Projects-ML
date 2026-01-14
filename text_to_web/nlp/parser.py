@@ -2,6 +2,7 @@
 """
 parser.py
 """
+import re
 from nlp import (
     detect_intent,
     detect_section,
@@ -10,41 +11,67 @@ from nlp import (
     extract_styles
 )
 
-last_element = None
+last_element = None 
+
+MULTI_ELEMENTS = {"paragraph", "footer"}
+
 
 def parser(text, schema=None):
     """
-    Parse text to extract intent, section, element, content, and style.
+    Parse the input text and return intent and entities.
+    Supports updating an existing schema.
     """
     global last_element
+    
     intent = detect_intent(text)
     section = detect_section(text)
     element = detect_element(text)
 
-    entities = {"head": [], "body": [], "footer": []}
+    if schema is None:
+        schema = {"head": {}, "body": {}, "footer": {}}
 
     if not element or element.lower() == "unknown":
+        styles = extract_styles(text)
         
-        if last_element:
-            element = last_element
+        if styles and last_element:
             
-            if schema:
-                for sec in ["head", "body", "footer"]:
-                    if last_element in schema[sec]:
-                        section = sec
-                        break
-        else:
-            return intent, entities
+            for sec in ["body", "footer"]:
+                
+                if last_element in schema.get(sec, {}):
+                    
+                    target = schema[sec][last_element]
+                    
+                    if isinstance(target, list):
+                        target[-1]["style"] = {**target[-1].get("style", {}), **styles}
+                    else:
+                        target["style"] = {**target.get("style", {}), **styles}
+                        
+        return intent, schema
 
     content = extract_content(text)
     styles = extract_styles(text)
 
     entity = {"type": element}
-    if content:
+
+    if element == "navbar":
+        items = [x.strip() for x in re.split(r'[,\s]+', content) if x.strip()]
+        entity["items"] = items
+        
+    elif content:
         entity["text"] = content
-    if styles:
+        
+    elif element == "footer":
+        entity["text"] = "© 2024 My Website"
+
+    if styles and section != "head":
         entity["style"] = styles
 
-    last_element = element
-    entities[section].append(entity)
-    return intent, entities
+    if section in ["body", "footer"]:
+        last_element = element
+
+    if element in MULTI_ELEMENTS and section != "head":
+        schema[section].setdefault(element, []).append(entity)
+    else:
+        schema[section][element] = entity
+
+    return intent, schema
