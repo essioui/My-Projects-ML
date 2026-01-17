@@ -4,26 +4,50 @@ style_extractor.py
 """
 from nlp.nlp_engine import nlp
 
+SIZE_KEYWORDS = {
+    "big": "large",
+    "large": "large",
+    "medium": "medium",
+    "normal": "medium",
+    "small": "small",
+}
+
+COLOR_KEYWORDS = {
+    "red", "blue", "green", "black",
+    "white", "yellow", "orange", "purple",
+}
+
 def extract_styles(text):
     """
-    Extract style information from the given text.
+    Extract style information from natural language text.
     """
-    doc = nlp(text)
+    doc = nlp(text.lower())
     styles = {}
 
     for token in doc:
-        lemma = token.lemma_.lower()
+        lemma = token.lemma_
 
-        if lemma in ["center", "centered"]:
+        # alignment
+        if lemma in {"center", "centered", "middle"}:
             styles["align"] = "center"
 
-        if lemma in ["red", "blue", "green", "black"]:
+        # colors
+        if lemma in COLOR_KEYWORDS:
             styles["color"] = lemma
 
-        if lemma in ["big", "large"]:
-            styles["size"] = "large"
+        # font size
+        if lemma in SIZE_KEYWORDS:
+            styles["size"] = SIZE_KEYWORDS[lemma]
 
-        if lemma in ["small"]:
-            styles["size"] = "small"
+        # flex / same line
+        if lemma in {"navbar", "menu", "horizontal", "inline"}:
+            styles["flex"] = True
+        
+        # background color
+        if "background" in text:
+            words = text.split()
+            for i, w in enumerate(words):
+                if w == "background" and i + 1 < len(words):
+                    styles["background_color"] = words[i + 1]
 
     return styles

@@ -46,6 +46,12 @@ def parser(text, schema=None):
                     else:
                         target["style"] = {**target.get("style", {}), **styles}
                         
+        if styles.get("background_color"):
+            schema["body"].setdefault("body_style", {"type": "body", "style": {}})
+            schema["body"]["body_style"]["style"].update({
+            "background_color": styles["background_color"]
+            })
+        
         return intent, schema
 
     content = extract_content(text)
@@ -57,6 +63,10 @@ def parser(text, schema=None):
         items = [x.strip() for x in re.split(r'[,\s]+', content) if x.strip()]
         entity["items"] = items
         
+        entity["style"] = {
+            "flex": True
+        }
+        
     elif content:
         entity["text"] = content
         
@@ -64,7 +74,7 @@ def parser(text, schema=None):
         entity["text"] = "© 2024 My Website"
 
     if styles and section != "head":
-        entity["style"] = styles
+        entity.setdefault("style", {}).update(styles)
 
     if section in ["body", "footer"]:
         last_element = element
